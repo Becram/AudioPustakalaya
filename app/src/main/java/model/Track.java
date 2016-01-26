@@ -8,11 +8,16 @@ public class Track {
 
 
     public String track_title;
+    public String track_url;
 
 
 
     public String getTitle() {
         return track_title;
+    }
+
+    public String getTrackURL() {
+        return track_url;
     }
 
 

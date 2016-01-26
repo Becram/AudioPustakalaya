@@ -42,7 +42,7 @@ public class RecyclerAdaper extends RecyclerView.Adapter<MyViewHolder> {
         final RecycleItem Book=mBookList.get(position);
 
         MyViewHolder.getTextViewName().setText(Book.title);
-        MyViewHolder.getAuthorViewName().setText(Book.Author);
+//        MyViewHolder.getAuthorViewName().setText(Book.Author);
 
 
         Log.d("book id", Book.id);

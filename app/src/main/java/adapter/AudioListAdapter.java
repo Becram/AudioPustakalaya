@@ -1,73 +1,102 @@
 package adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import com.example.bikram.apitest.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import activity.AudioDetails;
+import activity.MainActivity;
+import model.RecycleItem;
 import model.Track;
 
 /**
- * Created by bikram on 1/25/16.
+ * Created by bikram on 1/22/16.
  */
-public class AudioListAdapter extends BaseAdapter{
+public class AudioListAdapter extends RecyclerView.Adapter<MyAudioViewHolder> {
+
+    protected String BASE_URL="http://www.pustakalaya.org";
+
+    private Context myContext;
+    private MainActivity mainActivity;
 
     private Context mContext;
-    private List<Track> mTracks;
-
-    public AudioListAdapter(Context context, List<Track> tracks) {
-        mContext = context;
-        mTracks = tracks;
-    }
-
+    //    private ArrayList<String> mDataset;
+    private List<Track> mTrackList;
     @Override
-    public int getCount() {
-        return mTracks.size();
+    public MyAudioViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.audio_list_row, parent, false);
+
+        return new MyAudioViewHolder(v);
     }
+
 
 
     @Override
-    public Track getItem(int position) {
-        return mTracks.get(position);
+    public void onBindViewHolder(MyAudioViewHolder holder, int position) {
+        final Track mTrack=mTrackList.get(position);
+
+       MyAudioViewHolder.getTextViewAudioTitle().setText(mTrack.track_title);
+//        MyViewHolder.getAuthorViewName().setText(Book.Author);
+
+
+        Log.d("book id", mTrack.track_title);
+
+//        Picasso.with(mContext).load(BASE_URL+Book.image)
+//                .into(MyViewHolder.getPicture());
+
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Toast.makeText(this,Book.title,Toast.LENGTH_LONG).show();
+//                Log.d("clicked",mTrack.track_title);
+////                Intent i=new Intent(mContext, AudioDetails.class);
+////                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                i.putExtra("bookID",Book.id);
+////                mContext.startActivity(i);
+//            }
+//        });
+
+
+
+
     }
+
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return mTrackList.size();
+
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
 
-        Track track = getItem(position);
+    public void add(int position, String item) {
 
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.track_list_row, parent, false);
-            holder = new ViewHolder();
-//            holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
-            holder.titleTextView = (TextView) convertView.findViewById(R.id.track_title);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.titleTextView.setText(track.getTitle());
-
-        // Trigger the download of the URL asynchronously into the image view.
-//        Picasso.with(mContext).load(track.getArtworkURL()).into(holder.trackImageView);
-
-        return convertView;
     }
 
-    static class ViewHolder {
-//        ImageView trackImageView;
-        TextView titleTextView;
+    public void remove(String item) {
+//        int position = mDataset.indexOf(item);
+//        mDataset.remove(position);
+//        notifyItemRemoved(position);
     }
+
+    public AudioListAdapter( Context m, List<Track> BookList) {
+        this.mTrackList = BookList;
+        this.myContext=m;
+    }
+
+    public List<Track> getRepoList() {
+        return mTrackList;
+    }
+
+
+
 }

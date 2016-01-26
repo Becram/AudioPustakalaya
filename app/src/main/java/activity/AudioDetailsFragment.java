@@ -117,7 +117,8 @@ public class AudioDetailsFragment extends Fragment implements Callback<ModelAudi
                 text_language.setText("Language:" + response.body().getContent().getLang());
                 text_views.setText("Views:" + response.body().getContent().getViews());
                 text_publisher.setText("Publisher:" + response.body().getContent().getPublisher());
-                text_genre.setText("Reader:" + response.body().getContent().getGenre());
+                text_genre.setText("Genre:" + response.body().getContent().getGenre());
+                text_reader.setText("Reader:" + response.body().getContent().getReader());
                 text_description.setText("Description:" + response.body().getContent().getDesc());
                 text_chap_count.setText("Chapter Count:"+String.valueOf(response.body().getContent().getChapters().size()));
                 Log.d("Title:" , response.body().getContent().getTitle());
