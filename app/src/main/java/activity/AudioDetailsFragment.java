@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.example.bikram.apitest.R;
 import com.squareup.picasso.Picasso;
 
-import adapter.MyViewHolder;
+//import adapter.MyViewHolder;
 import api.PustakalayaApiInterface;
 import model.ModelAudioBookDetails;
 import retrofit.Call;

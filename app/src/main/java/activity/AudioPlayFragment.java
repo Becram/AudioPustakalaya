@@ -62,6 +62,9 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     private ImageView mPlayerControl;
     private RecyclerView audioRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private ImageView mSelectedTrackImage;
+    private TextView mSelectedTrackChapter;
+    private TextView mSelectedTrackStatus;
 
 
     @Override
@@ -75,28 +78,19 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.tab_play_details, container, false);
 
+        mSelectedTrackTitle = (TextView) v.findViewById(R.id.selected_track_title);
+        mSelectedTrackChapter = (TextView) v.findViewById(R.id.selected_chapter);
+        mSelectedTrackStatus = (TextView) v.findViewById(R.id.selected_playpause_status);
+//        mSelectedTrackTitle = (TextView) v.findViewById(R.id.selected_track_title);
+        mSelectedTrackImage = (ImageView) v.findViewById(R.id.selected_track_image);
+        mPlayerControl = (ImageView) v.findViewById(R.id.player_control);
+
 
         audioRecyclerView = (RecyclerView) v.findViewById(R.id.track_recycler_view);
         audioRecyclerView.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         audioRecyclerView.setLayoutManager(mLayoutManager);
-
-
-
-
-//        listView = (ListView)v.findViewById(R.id.track_list_view);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-//            {
-//                Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
-
 
 
 
@@ -130,6 +124,22 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
                 togglePlayPause();
             }
         });
+        mPlayerControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePlayPause();
+            }
+        });
+
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mPlayerControl.setImageResource(R.drawable.button_reload);
+            }
+        });
+
+
+
 
 
 
@@ -140,16 +150,18 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     private void togglePlayPause() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-//            mPlayerControl.setImageResource(R.drawable.play);
+            mPlayerControl.setImageResource(R.drawable.play_new);
+            mSelectedTrackStatus.setText(R.string.paused);
         } else {
             mMediaPlayer.start();
-//            mPlayerControl.setImageResource(R.drawable.pause44);
+            mPlayerControl.setImageResource(R.drawable.pause_new);
+            mSelectedTrackStatus.setText(R.string.playing);
         }
     }
 
     @Override
     public void onResponse(final Response<ModelAudioBookDetails> response, Retrofit retrofit) {
-//        loadTracks(response);
+        mListItems=createList(response);
 
         mAdapter = new AudioListAdapter(getContext(),createList(response));
         audioRecyclerView.clearFocus();
@@ -157,6 +169,12 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
         ItemClickSupport.addTo(audioRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                Track track = mListItems.get(position);
+                mSelectedTrackTitle.setText(response.body().getContent().getTitle());
+                mSelectedTrackChapter.setText(track.getTitle());
+
+                Picasso.with(getContext()).load(BASE_URL + response.body().getContent().getImage()).into(mSelectedTrackImage);
 
                 Log.d("item", String.valueOf(position));
                 if (mMediaPlayer.isPlaying()) {
@@ -166,18 +184,12 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
 
                 try {
 
+                    String audio_url = BASE_URL + createList(response).get(position).getTrackURL();
+                    String fixedUrl = audio_url.replaceAll("\\s", "%20");
+//
 
-//                    URI audio_url = URI.parse(BASE_URL + createList(response).get(position).getTrackURL());
-//                    Uri uri  = Uri.parse(BASE_URL + createList(response).get(position).getTrackURL());
-
-
-                    String audio_url = URLEncoder.encode(BASE_URL + createList(response).get(position).getTrackURL(), "UTF-8");
-//                    mMediaPlayer.setDataSource("http://www.pustakalaya.org/sound/4%20Tips%20for%20Teaching%20listening%20and%20speaking_B%204.mp3");
-//                    MediaPlayer player = MediaPlayer.create(this, BASE_URL + createList(response).get(position).getTrackURL()));
-
-
-                    mMediaPlayer.setDataSource(audio_url);
-                    Log.d("track url", audio_url);
+                    mMediaPlayer.setDataSource(fixedUrl);
+                    Log.d("track url", fixedUrl);
                     mMediaPlayer.prepareAsync();
 
                 } catch (IOException e) {

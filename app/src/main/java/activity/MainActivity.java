@@ -1,5 +1,7 @@
 package activity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -39,8 +42,7 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
     protected String API="http://www.pustakalaya.org";
     protected ListView list;
     protected PustakalayaApiInterface APIInterface;
-
-
+    private List<RecycleItem> result;
 
 
     @Override
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
                 .baseUrl("http://www.pustakalaya.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        APIInterface=retrofit.create(PustakalayaApiInterface.class);
+        APIInterface = retrofit.create(PustakalayaApiInterface.class);
         Call<AllAudioBooks> call = APIInterface.getAllAudioBooks();
         //asynchronous call
         call.enqueue(this);
@@ -68,10 +70,9 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+
     }
-
-
-
 
 
 
@@ -90,32 +91,41 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
 
 
     @Override
-    public void onResponse(Response<AllAudioBooks> response, Retrofit retrofit) {
+    public void onResponse(final Response<AllAudioBooks> response, Retrofit retrofit) {
 
-//        ArrayList<String> arrayAdapter = null;
-//        int NoOfBook=response.body().getContent().size();
-//        for (int i=0;i<NoOfBook;i++){
-//
-//            arrayAdapter.add(response.body().getContent().get(i).getBookCover());
-//
-//        Content Tets=response.body().getContent().get(i);
-//        Log.d("body",Tets.getBookCover()+" "+Tets.getPid() +"_ "+String.valueOf(i+1));
-////        Log.d("body",);
-////            List<Content> arrayAdapter=new ArrayList<>();
-//            mAdapter=new RecyclerAdaper(arrayAdapter);
-//
-//
-//            mRecyclerView.setAdapter(mAdapter);
+//        Log.d("size of book list", String.valueOf(response.body().getContent().size()));
+//        Log.d("size of book list", String.valueOf(response.body().getContent().get(109).getTitle()));
 
-//        }
 
-        mAdapter = new RecyclerAdaper(getApplicationContext(),createList(response));
-        mRecyclerView.clearFocus();
-        mRecyclerView.setAdapter(mAdapter);
+
+
+          createList(response);
+          mAdapter = new RecyclerAdaper(result,mRecyclerView,getApplication());
+          mRecyclerView.clearFocus();
+          mRecyclerView.setAdapter(mAdapter);
+
 
 //        RecyclerAdaper adapter = (RecyclerAdaper) mRecyclerView.getAdapter();
         Log.d("snkbdj", ToStringBuilder.reflectionToString(response));
-//        adapter.notifyDataSetChanged();
+       mAdapter.notifyDataSetChanged();
+
+        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+
+
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+
+                Log.d("Cool", response.body().getContent().get(position).getTitle());
+
+                Intent i=new Intent(getApplicationContext(), AudioDetails.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("bookID", response.body().getContent().get(position).getId());
+                Log.d("book id",response.body().getContent().get(position).getId());
+                startActivity(i);
+            }
+
+        });
 
 
 
@@ -129,9 +139,11 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
 
     }
 
-    private List<RecycleItem> createList(Response<AllAudioBooks> t) {
 
-        List<RecycleItem> result = new ArrayList<>();
+
+    private void createList(Response<AllAudioBooks> t) {
+
+        result = new ArrayList<>();
         for (int i = 0; i < t.body().getContent().size(); i++) {
             RecycleItem ci = new RecycleItem();
             ci.title = t.body().getContent().get(i).getTitle();
@@ -145,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements Callback<AllAudio
 
         }
 
-        return result;
+//        return result;
 
 
     }

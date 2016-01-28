@@ -2,4 +2,6 @@
     <string name="app_name">APITest</string>
     <string name="action_settings">Settings</string>
     <string name="testsong_20_sec">http://www.pustakalaya.org/sound/Pustakalaya:517.mp3</string>
+    <string name="paused">Paused</string>
+    <string name="playing">Now Playing...</string>
 </resources>
