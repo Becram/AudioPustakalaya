@@ -4,7 +4,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +50,7 @@ import retrofit.Retrofit;
 /**
  * Created by bikram on 1/25/16.
  */
-public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBookDetails>{
+public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBookDetails>, SeekBar.OnSeekBarChangeListener{
 
     private List<Track> mListItems;
     private AudioListAdapter mAdapter;
@@ -65,6 +68,8 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     private ImageView mSelectedTrackImage;
     private TextView mSelectedTrackChapter;
     private TextView mSelectedTrackStatus;
+    private SeekBar mSeekBar;
+    Handler seekHandler = new Handler();
 
 
     @Override
@@ -84,18 +89,36 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
 //        mSelectedTrackTitle = (TextView) v.findViewById(R.id.selected_track_title);
         mSelectedTrackImage = (ImageView) v.findViewById(R.id.selected_track_image);
         mPlayerControl = (ImageView) v.findViewById(R.id.player_control);
-
+        mSeekBar= (SeekBar) v.findViewById(R.id.seekBar);
 
         audioRecyclerView = (RecyclerView) v.findViewById(R.id.track_recycler_view);
         audioRecyclerView.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         audioRecyclerView.setLayoutManager(mLayoutManager);
+//        mSeekBar.setMax(mMediaPlayer.getDuration());
+        mSeekBar.setOnSeekBarChangeListener(this);
+
+
 
 
 
         return  v;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -109,11 +132,10 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
                 .baseUrl("http://www.pustakalaya.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        APIInterface=retrofit.create(PustakalayaApiInterface.class);
+        APIInterface = retrofit.create(PustakalayaApiInterface.class);
         Call<ModelAudioBookDetails> call = APIInterface.getAudioBooksDetails(AudioDetails.bookid);
 
         call.enqueue(this);
-
 
 
         mMediaPlayer = new MediaPlayer();
@@ -128,8 +150,10 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
             @Override
             public void onClick(View v) {
                 togglePlayPause();
+
             }
         });
+
 
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -137,23 +161,45 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
                 mPlayerControl.setImageResource(R.drawable.button_reload);
             }
         });
+        int startPosition = 0;
+        int total = mMediaPlayer.getDuration();
+        Log.d("track", String.valueOf(total));
 
 
+    }
+
+    Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            SeekUpdation();
+        }
 
 
+    };
 
+    public void SeekUpdation() {
 
+        seekHandler.removeCallbacks(run);
+        if (mMediaPlayer != null)
+            mSeekBar.setMax(mMediaPlayer.getDuration());
+            mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
 
+        Log.d("max", String.valueOf(mMediaPlayer.getDuration()));
 
+        seekHandler.postDelayed(run, 1000);
     }
 
     private void togglePlayPause() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             mPlayerControl.setImageResource(R.drawable.play_new);
+//            mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
             mSelectedTrackStatus.setText(R.string.paused);
+
         } else {
             mMediaPlayer.start();
+            SeekUpdation();
+//            mSeekBar.setMax(mMediaPlayer.getDuration());
             mPlayerControl.setImageResource(R.drawable.pause_new);
             mSelectedTrackStatus.setText(R.string.playing);
         }
@@ -210,6 +256,9 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     @Override
     public void onFailure(Throwable t) {
 
+        Log.d("API failed","failed to fetch data");
+
+
     }
 
 
@@ -233,5 +282,26 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     }
 
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(fromUser) {
+            mMediaPlayer.seekTo(progress);
+//            mSeekBar.setMax(mMediaPlayer.getDuration());
+            mSeekBar.setProgress(progress);
+        }
+        Log.d("Seek progeress ", String.valueOf(progress));
 
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }

@@ -43,7 +43,7 @@
                 android:paddingLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="chapter"
+
                 android:textStyle="italic"/>
 
         <TextView
@@ -51,14 +51,14 @@
             android:paddingLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:text="title"/>
+            android:textSize="15sp"
+         />
         <TextView
             android:id="@+id/selected_chapter"
             android:paddingLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="chapter"/>
+         />
         </LinearLayout>
 
         <ImageView
@@ -68,6 +68,14 @@
             android:layout_height="@dimen/image_size"/>
 
     </android.support.v7.widget.Toolbar>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/seekBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <!--<ProgressBar-->
         <!--style="?android:attr/progressBarStyleLarge"-->
