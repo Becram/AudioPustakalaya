@@ -18,6 +18,7 @@ android:layout_height="match_parent">
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+
         <ImageView
             android:id="@+id/icon_recycle"
             android:layout_width="200px"
@@ -47,6 +48,7 @@ android:layout_height="match_parent">
             android:layout_above="@id/secondLine"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:textColor="@color/colorPrimary"
             android:layout_alignWithParentIfMissing="true"
             android:layout_toRightOf="@id/icon_recycle"
             android:gravity="center_vertical"

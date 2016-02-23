@@ -1,6 +1,7 @@
 package helper;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.example.bikram.apitest.R;
@@ -18,6 +19,7 @@ public class ItemClickSupport {
             if (mOnItemClickListener != null) {
                 RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
                 mOnItemClickListener.onItemClicked(mRecyclerView, holder.getAdapterPosition(), v);
+                Log.d("item clicked", String.valueOf(holder.getAdapterPosition()));
             }
         }
     };

@@ -17,8 +17,11 @@ public interface PustakalayaApiInterface {
     @GET("/api/editors_pick")
      Call<BookWrapper> getBook();
 
-    @GET("/api/listAllAudioBook/1/200/date/asc")
-    Call<AllAudioBooks>  getAllAudioBooks();
+//    @GET("/api/listAllAudioBook/1/200/date/asc")
+//    Call<AllAudioBooks>  getAllAudioBooks();
+
+    @GET("/api/listAllAudioBook/1/200/{sort}/asc")
+    Call<AllAudioBooks>  getAllAudioBooks(@Path("sort") String sort);
 
 
     @GET("/api/listAllChapters/{bookid}")

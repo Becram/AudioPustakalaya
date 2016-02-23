@@ -4,4 +4,5 @@
     <string name="testsong_20_sec">http://www.pustakalaya.org/sound/Pustakalaya:517.mp3</string>
     <string name="paused">Paused</string>
     <string name="playing">Now Playing...</string>
+    <string name="app">Pustakalaya_Audio</string>
 </resources>

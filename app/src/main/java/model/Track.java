@@ -10,6 +10,8 @@ public class Track {
     public String track_title;
     public String track_url;
 
+    public int track_size;
+    public int track_duration;
 
 
     public String getTitle() {
@@ -18,6 +20,12 @@ public class Track {
 
     public String getTrackURL() {
         return track_url;
+    }
+    public int getTrackSize() {
+        return track_size;
+    }
+    public int getTrackDuration() {
+        return track_duration;
     }
 
 

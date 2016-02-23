@@ -84,6 +84,8 @@ public class AudioDetails extends AppCompatActivity  {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.been);
+        tabLayout.getTabAt(1).setIcon(R.drawable.bed24);
 
 
     }

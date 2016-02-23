@@ -2,6 +2,7 @@ package adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,6 +44,7 @@ public class RecyclerAdaper<T> extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
 //    private ArrayList<String> mDataset;
     private List<RecycleItem> mBookList;
+    private Typeface face;
 
 
     public RecyclerAdaper(List<RecycleItem> BookList , RecyclerView recyclerView,Context con) {
@@ -99,10 +101,14 @@ public class RecyclerAdaper<T> extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        face= Typeface.createFromAsset(mContext.getAssets(), "fonts/Kelson Sans Light.otf");
+
         final RecycleItem Book=mBookList.get(position);
         if (holder instanceof MyViewHolder) {
             ((MyViewHolder) holder).getTextViewName().setText(Book.title);
-            ((MyViewHolder) holder).getAuthorViewName().setText(String.valueOf(position));
+            ((MyViewHolder) holder).getTextViewName().setTypeface(face);
+            ((MyViewHolder) holder).getAuthorViewName().setText(Book.Author);
+            ((MyViewHolder) holder).getAuthorViewName().setTypeface(face);
             Picasso.with(mContext).load(BASE_URL + Book.image)
                 .into(((MyViewHolder) holder).getPicture());
 

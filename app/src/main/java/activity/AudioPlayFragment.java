@@ -1,9 +1,17 @@
 package activity;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
@@ -26,6 +34,7 @@ import android.widget.Toast;
 import com.example.bikram.apitest.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -55,6 +64,7 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     private List<Track> mListItems;
     private AudioListAdapter mAdapter;
     private PustakalayaApiInterface APIInterface;
+    public static String AudioDirectory = Environment.getExternalStorageDirectory()+"/Epustakalaya/AudioBooks/";
      public ListView listView;
     protected String BASE_URL="http://www.pustakalaya.org";
 
@@ -70,11 +80,64 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     private TextView mSelectedTrackStatus;
     private SeekBar mSeekBar;
     Handler seekHandler = new Handler();
+    private View toolbar_view;
+    private static int a=0;
+    private BroadcastReceiver downloadCompleteBroadcastReceiver;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+    }
+
+
+    public static boolean createAudioDir(){
+        boolean ret = true;
+
+        File file = new File(AudioDirectory);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e("CreatDir", "Problem creating Audio folder");
+                ret = false;
+            }
+        }
+        return ret;
+    }
+
+//    public void AudioDownloader(String book_title,String downloadFileUrl){
+//
+//        Uri localFileUrl = Uri.fromFile(new File(AudioDirectory + book_title));
+//        DownloadManager.Request request = new DownloadManager.Request(downloadFileUrl);
+//        request.setDescription("Downloading ...")
+//                .setTitle(book.title);
+//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            // only for honeycomb
+//            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//        }
+//
+//        //The server need to send the content-length on http response
+//        //http://stackoverflow.com/questions/26401069/android-download-manager-always-displays-indefinite-progress-bar-and-not-progres
+//        request.setDestinationUri(localFileUrl);
+//        request.setVisibleInDownloadsUi(true);
+//
+//    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        seekHandler.removeCallbacks(run);
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+
+
     }
 
     @Override
@@ -98,6 +161,7 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
         audioRecyclerView.setLayoutManager(mLayoutManager);
 //        mSeekBar.setMax(mMediaPlayer.getDuration());
         mSeekBar.setOnSeekBarChangeListener(this);
+        toolbar_view=v.findViewById(R.id.view);
 
 
 
@@ -109,6 +173,7 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        seekHandler.removeCallbacks(run);
         if (mMediaPlayer != null) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.stop();
@@ -178,21 +243,37 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     };
 
     public void SeekUpdation() {
+//        mMediaPlayer.getCurrentPosition()=a;
 
         seekHandler.removeCallbacks(run);
-        if (mMediaPlayer != null)
-            mSeekBar.setMax(mMediaPlayer.getDuration());
+        try {
+            if (mMediaPlayer != null)
+                mSeekBar.setMax(mMediaPlayer.getDuration());
+
             mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
 
-        Log.d("max", String.valueOf(mMediaPlayer.getDuration()));
 
-        seekHandler.postDelayed(run, 1000);
+
+
+            Log.d("max", String.valueOf(mMediaPlayer.getDuration()));
+
+
+            seekHandler.postDelayed(run, 1000);
+
+        }catch (InstantiationException e){
+
+            Log.d("max", e.toString());
+        }
+
     }
 
     private void togglePlayPause() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             mPlayerControl.setImageResource(R.drawable.play_new);
+            toolbar_view.setVisibility(View.VISIBLE);
+
+
 //            mSeekBar.setProgress(mMediaPlayer.getCurrentPosition());
             mSelectedTrackStatus.setText(R.string.paused);
 
@@ -202,6 +283,7 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
 //            mSeekBar.setMax(mMediaPlayer.getDuration());
             mPlayerControl.setImageResource(R.drawable.pause_new);
             mSelectedTrackStatus.setText(R.string.playing);
+            toolbar_view.setVisibility(View.VISIBLE);
         }
     }
 
@@ -209,7 +291,7 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     public void onResponse(final Response<ModelAudioBookDetails> response, Retrofit retrofit) {
         mListItems=createList(response);
 
-        mAdapter = new AudioListAdapter(getContext(),createList(response));
+        mAdapter = new AudioListAdapter(createList(response),audioRecyclerView ,getActivity());
         audioRecyclerView.clearFocus();
         audioRecyclerView.setAdapter(mAdapter);
         ItemClickSupport.addTo(audioRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -269,6 +351,8 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
             Track ci = new Track();
             ci.track_title = t.body().getContent().getChapters().get(i).getChapter();
             ci.track_url=t.body().getContent().getChapters().get(i).getFile();
+            ci.track_size=t.body().getContent().getChapters().get(i).getSize();
+            ci.track_duration=t.body().getContent().getChapters().get(i).getDuration();
             Log.d("get count", String.valueOf(t.body().getContent().getTitle())) ;
 
 
@@ -304,4 +388,8 @@ public class AudioPlayFragment extends Fragment implements Callback<ModelAudioBo
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
+
+
+
 }

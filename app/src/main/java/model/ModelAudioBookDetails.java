@@ -13,42 +13,33 @@ import activity.AudioDetails;
 public class ModelAudioBookDetails {
 
 
-
     private String type;
     private AudioContent content;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The content
+     * @return The content
      */
     public AudioContent getContent() {
         return content;
     }
 
     /**
-     *
-     * @param content
-     * The content
+     * @param content The content
      */
     public void setContent(AudioContent content) {
         this.content = content;
@@ -86,324 +77,252 @@ public class ModelAudioBookDetails {
         private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
         /**
-         *
-         * @return
-         * The bookId
+         * @return The bookId
          */
         public String getBookId() {
             return bookId;
         }
 
         /**
-         *
-         * @param bookId
-         * The bookId
+         * @param bookId The bookId
          */
         public void setBookId(String bookId) {
             this.bookId = bookId;
         }
 
         /**
-         *
-         * @return
-         * The title
+         * @return The title
          */
         public String getTitle() {
             return title;
         }
 
         /**
-         *
-         * @param title
-         * The title
+         * @param title The title
          */
         public void setTitle(String title) {
             this.title = title;
         }
 
         /**
-         *
-         * @return
-         * The desc
+         * @return The desc
          */
         public String getDesc() {
             return desc;
         }
 
         /**
-         *
-         * @param desc
-         * The desc
+         * @param desc The desc
          */
         public void setDesc(String desc) {
             this.desc = desc;
         }
 
         /**
-         *
-         * @return
-         * The author
+         * @return The author
          */
         public String getAuthor() {
             return author;
         }
 
         /**
-         *
-         * @param author
-         * The author
+         * @param author The author
          */
         public void setAuthor(String author) {
             this.author = author;
         }
 
         /**
-         *
-         * @return
-         * The reader
+         * @return The reader
          */
         public String getReader() {
             return reader;
         }
 
         /**
-         *
-         * @param reader
-         * The reader
+         * @param reader The reader
          */
         public void setReader(String reader) {
             this.reader = reader;
         }
 
         /**
-         *
-         * @return
-         * The publisher
+         * @return The publisher
          */
         public String getPublisher() {
             return publisher;
         }
 
         /**
-         *
-         * @param publisher
-         * The publisher
+         * @param publisher The publisher
          */
         public void setPublisher(String publisher) {
             this.publisher = publisher;
         }
 
         /**
-         *
-         * @return
-         * The lang
+         * @return The lang
          */
         public String getLang() {
             return lang;
         }
 
         /**
-         *
-         * @param lang
-         * The lang
+         * @param lang The lang
          */
         public void setLang(String lang) {
             this.lang = lang;
         }
 
         /**
-         *
-         * @return
-         * The genre
+         * @return The genre
          */
         public String getGenre() {
             return genre;
         }
 
         /**
-         *
-         * @param genre
-         * The genre
+         * @param genre The genre
          */
         public void setGenre(String genre) {
             this.genre = genre;
         }
 
         /**
-         *
-         * @return
-         * The place
+         * @return The place
          */
         public String getPlace() {
             return place;
         }
 
         /**
-         *
-         * @param place
-         * The place
+         * @param place The place
          */
         public void setPlace(String place) {
             this.place = place;
         }
 
         /**
-         *
-         * @return
-         * The date
+         * @return The date
          */
         public String getDate() {
             return date;
         }
 
         /**
-         *
-         * @param date
-         * The date
+         * @param date The date
          */
         public void setDate(String date) {
             this.date = date;
         }
 
         /**
-         *
-         * @return
-         * The subj
+         * @return The subj
          */
         public String getSubj() {
             return subj;
         }
 
         /**
-         *
-         * @param subj
-         * The subj
+         * @param subj The subj
          */
         public void setSubj(String subj) {
             this.subj = subj;
         }
 
         /**
-         *
-         * @return
-         * The notes
+         * @return The notes
          */
         public String getNotes() {
             return notes;
         }
 
         /**
-         *
-         * @param notes
-         * The notes
+         * @param notes The notes
          */
         public void setNotes(String notes) {
             this.notes = notes;
         }
 
         /**
-         *
-         * @return
-         * The keyword
+         * @return The keyword
          */
         public String getKeyword() {
             return keyword;
         }
 
         /**
-         *
-         * @param keyword
-         * The keyword
+         * @param keyword The keyword
          */
         public void setKeyword(String keyword) {
             this.keyword = keyword;
         }
 
         /**
-         *
-         * @return
-         * The link
+         * @return The link
          */
         public String getLink() {
             return link;
         }
 
         /**
-         *
-         * @param link
-         * The link
+         * @param link The link
          */
         public void setLink(String link) {
             this.link = link;
         }
 
         /**
-         *
-         * @return
-         * The image
+         * @return The image
          */
         public String getImage() {
             return image;
         }
 
         /**
-         *
-         * @param image
-         * The image
+         * @param image The image
          */
         public void setImage(String image) {
             this.image = image;
         }
 
         /**
-         *
-         * @return
-         * The views
+         * @return The views
          */
         public String getViews() {
             return views;
         }
 
         /**
-         *
-         * @param views
-         * The views
+         * @param views The views
          */
         public void setViews(String views) {
             this.views = views;
         }
 
         /**
-         *
-         * @return
-         * The chapterCount
+         * @return The chapterCount
          */
         public String getChapterCount() {
             return String.valueOf(chapterCount);
         }
 
         /**
-         *
-         * @param chapterCount
-         * The chapter_count
+         * @param chapterCount The chapter_count
          */
         public void setChapterCount(Integer chapterCount) {
             this.chapterCount = chapterCount;
         }
 
         /**
-         *
-         * @return
-         * The chapters
+         * @return The chapters
          */
         public List<Chapter> getChapters() {
             return chapters;
         }
 
         /**
-         *
-         * @param chapters
-         * The chapters
+         * @param chapters The chapters
          */
         public void setChapters(List<Chapter> chapters) {
             this.chapters = chapters;
@@ -424,68 +343,77 @@ public class ModelAudioBookDetails {
         private String id;
         private String file;
         private String chapter;
-        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+        private Integer duration;
+        private Integer size;
 
         /**
-         *
-         * @return
-         * The id
+         * @return The id
          */
         public String getId() {
             return id;
         }
 
         /**
-         *
-         * @param id
-         * The id
+         * @param id The id
          */
         public void setId(String id) {
             this.id = id;
         }
 
         /**
-         *
-         * @return
-         * The file
+         * @return The file
          */
         public String getFile() {
             return file;
         }
 
         /**
-         *
-         * @param file
-         * The file
+         * @param file The file
          */
         public void setFile(String file) {
             this.file = file;
         }
 
         /**
-         *
-         * @return
-         * The chapter
+         * @return The chapter
          */
         public String getChapter() {
             return chapter;
         }
 
         /**
-         *
-         * @param chapter
-         * The chapter
+         * @param chapter The chapter
          */
         public void setChapter(String chapter) {
             this.chapter = chapter;
         }
 
-        public Map<String, Object> getAdditionalProperties() {
-            return this.additionalProperties;
+        /**
+         * @return The duration
+         */
+        public Integer getDuration() {
+            return duration;
         }
 
-        public void setAdditionalProperty(String name, Object value) {
-            this.additionalProperties.put(name, value);
+        /**
+         * @param duration The duration
+         */
+        public void setDuration(Integer duration) {
+            this.duration = duration;
+        }
+
+        /**
+         * @return The size
+         */
+        public Integer getSize() {
+            return size;
+        }
+
+        /**
+         * @param size The size
+         */
+        public void setSize(Integer size) {
+            this.size = size;
         }
 
     }

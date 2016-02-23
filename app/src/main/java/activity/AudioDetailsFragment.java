@@ -4,6 +4,7 @@ package activity;
 import android.annotation.TargetApi;
 
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.bikram.apitest.R;
@@ -47,6 +49,8 @@ public class AudioDetailsFragment extends Fragment implements Callback<ModelAudi
 
 
     protected String BASE_URL="http://www.pustakalaya.org";
+    private ProgressBar progress_detail;
+    private Typeface face;
 
 
     @Override
@@ -69,10 +73,13 @@ public class AudioDetailsFragment extends Fragment implements Callback<ModelAudi
         text_genre= (TextView) v.findViewById(R.id.textView_genre);
         text_chap_count= (TextView) v.findViewById(R.id.textView_Chap_count);
         text_description= (TextView) v.findViewById(R.id.textView_description);
+        progress_detail= (ProgressBar) v.findViewById(R.id.progress_details);
 
 
 
-        text_author.setText("radhav");
+//        text_author.setText("radhav");
+        progress_detail.setVisibility(View.VISIBLE);
+
 
 
 
@@ -89,6 +96,7 @@ public class AudioDetailsFragment extends Fragment implements Callback<ModelAudi
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         APIInterface=retrofit.create(PustakalayaApiInterface.class);
+        face=Typeface.createFromAsset(getActivity().getAssets(), "fonts/Kelson Sans Light.otf");
 
         Log.d("Bookid from details",AudioDetails.bookid);
         Call<ModelAudioBookDetails> call = APIInterface.getAudioBooksDetails(AudioDetails.bookid);
@@ -100,18 +108,23 @@ public class AudioDetailsFragment extends Fragment implements Callback<ModelAudi
     public void onResponse(final Response<ModelAudioBookDetails> response, Retrofit retrofit) {
 
 
+
         new AsyncTask<Void, Void, Response<ModelAudioBookDetails>>() {
             @Override
             protected Response<ModelAudioBookDetails> doInBackground(Void... params) {
+
                 return response;
             }
 
             @Override
             protected void onPostExecute(Response<ModelAudioBookDetails> modelAudioBookDetailsResponse) {
                 super.onPostExecute(modelAudioBookDetailsResponse);
+                progress_detail.setVisibility(View.GONE);
                 Picasso.with(getContext()).load(BASE_URL + response.body().getContent().getImage())
                         .into(cover);
                 text_title.setText("Title:" + response.body().getContent().getTitle());
+                text_description.setTypeface(face);
+
 
                 text_author.setText("Author:" + response.body().getContent().getAuthor());
                 text_language.setText("Language:" + response.body().getContent().getLang());
